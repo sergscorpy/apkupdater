@@ -109,7 +109,7 @@ class GitHubRepository(
             r.filter { filterPreRelease(it) }.filter { findApkAsset(it.assets).isNotEmpty() }
         }
 
-        if (releases.isNotEmpty() && Version(filterVersionTag(releases[0].tag_name)) > Version(currentVersion)) {
+        if (releases.isNotEmpty() && Version(filterVersionTag(releases[0].tag_name)) > Version(filterVersionTag(currentVersion))) {
             val app = apps?.getApp(packageName)
             emit(listOf(AppUpdate(
                 name = repo,
