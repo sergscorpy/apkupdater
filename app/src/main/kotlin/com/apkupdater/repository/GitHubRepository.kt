@@ -32,11 +32,9 @@ class GitHubRepository(
     suspend fun updates(apps: List<AppInstalled>) = flow {
         val checks = mutableListOf(selfCheck())
 
-        GitHubApps.forEachIndexed { i, app ->
-            if (i != 0) {
-                apps.find { it.packageName == app.packageName }?.let {
-                    checks.add(checkApp(apps, app.user, app.repo, app.packageName, it.version, app.extra))
-                }
+        GitHubApps.forEach { app ->
+            apps.find { it.packageName == app.packageName }?.let {
+                checks.add(checkApp(apps, app.user, app.repo, app.packageName, it.version, app.extra))
             }
         }
 
