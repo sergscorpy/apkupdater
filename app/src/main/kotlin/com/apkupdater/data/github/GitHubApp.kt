@@ -46,7 +46,7 @@ val GitHubApps = listOf(
     GitHubApp("green_green_avk.anotherterm.redist", "green-green-avk", "AnotherTerm", contains("redist-versioned")),
     GitHubApp("com.menny.android.anysoftkeyboard", "AnySoftKeyboard", "AnySoftKeyboard"),
     GitHubApp("org.courville.nova", "nova-video-player", "aos-AVP"),
-    GitHubApp("com.apkupdater.ci", "rumboalla", "apkupdater"),
+    GitHubApp("com.apkupdater.ci", "sergscorpy", "apkupdater"),
     GitHubApp("com.standardnotes", "standardnotes", "app"),
     GitHubApp("com.xBrowserSync.android", "xbrowsersync", "app"),
     GitHubApp("io.appflowy.appflowy", "AppFlowy-IO", "AppFlowy"),
