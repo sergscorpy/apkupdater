@@ -10,6 +10,8 @@ data class GitHubApp(
 )
 
 val GitHubApps = listOf(
+    GitHubApp("org.ks49.retrickstation", "sergscorpy", "qgroundcontrol", tag = contains("rasphold"), properName = "reTrickStation"),
+    GitHubApp("org.ks49.groundstation", "sergscorpy", "qgroundcontrol",  tag = notContains("rasphold"), properName = "GroundStation"),
     GitHubApp("com.lvonasek.arcore3dscanner", "lvonasek", "3DLiveScanner"),
     GitHubApp("mattecarra.accapp", "MatteCarra", "AccA"),
     GitHubApp("app.accrescent.client", "accrescent", "accrescent"),
