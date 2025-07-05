@@ -50,7 +50,7 @@ class GitHubRepository(
         val checks = mutableListOf<Flow<List<AppUpdate>>>()
 
         GitHubApps.forEach { app ->
-            if (app.repo.contains(text, true) || app.user.contains(text, true) || app.packageName.contains(text, true)) {
+            if (app.repo.contains(text, true) || app.user.contains(text, true) || app.packageName.contains(text, true) || app.properName?.contains(text, true) ?: false) {
                 checks.add(checkApp(null, app.user, app.repo, app.packageName, "?", null, app.tag, app.properName))
             }
         }
