@@ -4,7 +4,9 @@ data class GitHubApp(
     val packageName: String,
     val user: String,
     val repo: String,
-    val extra: Regex? = null
+    val extra: Regex? = null,
+    val tag: Regex? = null,
+    val properName: String? = null
 )
 
 val GitHubApps = listOf(
