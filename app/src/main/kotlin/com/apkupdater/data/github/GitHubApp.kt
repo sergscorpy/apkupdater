@@ -4,10 +4,14 @@ data class GitHubApp(
     val packageName: String,
     val user: String,
     val repo: String,
-    val extra: Regex? = null
+    val extra: Regex? = null,
+    val tag: Regex? = null,
+    val properName: String? = null
 )
 
 val GitHubApps = listOf(
+    GitHubApp("org.ks49.retrickstation", "sergscorpy", "qgroundcontrol", tag = contains("rasphold"), properName = "reTrickStation"),
+    GitHubApp("org.ks49.groundstation", "sergscorpy", "qgroundcontrol",  tag = notContains("rasphold"), properName = "GroundStation"),
     GitHubApp("com.lvonasek.arcore3dscanner", "lvonasek", "3DLiveScanner"),
     GitHubApp("mattecarra.accapp", "MatteCarra", "AccA"),
     GitHubApp("app.accrescent.client", "accrescent", "accrescent"),
@@ -46,7 +50,7 @@ val GitHubApps = listOf(
     GitHubApp("green_green_avk.anotherterm.redist", "green-green-avk", "AnotherTerm", contains("redist-versioned")),
     GitHubApp("com.menny.android.anysoftkeyboard", "AnySoftKeyboard", "AnySoftKeyboard"),
     GitHubApp("org.courville.nova", "nova-video-player", "aos-AVP"),
-    GitHubApp("com.apkupdater.ci", "rumboalla", "apkupdater"),
+    GitHubApp("com.apkupdater.ci", "sergscorpy", "apkupdater"),
     GitHubApp("com.standardnotes", "standardnotes", "app"),
     GitHubApp("com.xBrowserSync.android", "xbrowsersync", "app"),
     GitHubApp("io.appflowy.appflowy", "AppFlowy-IO", "AppFlowy"),

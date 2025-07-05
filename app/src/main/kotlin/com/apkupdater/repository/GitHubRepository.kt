@@ -32,11 +32,9 @@ class GitHubRepository(
     suspend fun updates(apps: List<AppInstalled>) = flow {
         val checks = mutableListOf(selfCheck())
 
-        GitHubApps.forEachIndexed { i, app ->
-            if (i != 0) {
-                apps.find { it.packageName == app.packageName }?.let {
-                    checks.add(checkApp(apps, app.user, app.repo, app.packageName, it.version, app.extra))
-                }
+        GitHubApps.forEach { app ->
+            apps.find { it.packageName == app.packageName }?.let {
+                checks.add(checkApp(apps, app.user, app.repo, app.packageName, it.version, app.extra, app.tag, app.properName))
             }
         }
 
@@ -52,8 +50,8 @@ class GitHubRepository(
         val checks = mutableListOf<Flow<List<AppUpdate>>>()
 
         GitHubApps.forEach { app ->
-            if (app.repo.contains(text, true) || app.user.contains(text, true) || app.packageName.contains(text, true)) {
-                checks.add(checkApp(null, app.user, app.repo, app.packageName, "?", null))
+            if (app.repo.contains(text, true) || app.user.contains(text, true) || app.packageName.contains(text, true) || app.properName?.contains(text, true) ?: false) {
+                checks.add(checkApp(null, app.user, app.repo, app.packageName, "?", null, app.tag, app.properName))
             }
         }
 
@@ -72,7 +70,7 @@ class GitHubRepository(
 
     private fun selfCheck() = flow {
         val releases = service.getReleases().filter { filterPreRelease(it) }
-        val versions = getVersions(releases[0].name)
+        val versions = getVersions(releases.firstOrNull()?.name ?: "") 
 
         if (versions.second > BuildConfig.VERSION_CODE.toLong()) {
             emit(listOf(AppUpdate(
@@ -101,20 +99,22 @@ class GitHubRepository(
         repo: String,
         packageName: String,
         currentVersion: String,
-        extra: Regex?
+        extra: Regex?,
+        tag: Regex?,
+        properName: String?
     ) = flow {
         val r = service.getReleases(user, repo)
         val releases = if (packageName == "com.apkupdater.ci") {
             // TODO: Find a better way to do this
             r.filter { it.name.contains("CI-Release-3.x")}
         } else {
-            r.filter { filterPreRelease(it) }.filter { findApkAsset(it.assets).isNotEmpty() }
+            r.filter { filterTag(it, tag) }.filter { filterPreRelease(it) }.filter { findApkAsset(it.assets).isNotEmpty() }
         }
 
-        if (releases.isNotEmpty() && Version(filterVersionTag(releases[0].tag_name)) > Version(currentVersion)) {
+        if (releases.isNotEmpty() && Version(filterVersionTag(releases[0].tag_name)) > Version(filterVersionTag(currentVersion))) {
             val app = apps?.getApp(packageName)
             emit(listOf(AppUpdate(
-                name = repo,
+                name = properName ?: repo,
                 packageName = packageName,
                 version = releases[0].tag_name,
                 oldVersion = app?.version ?: "?",
@@ -140,6 +140,11 @@ class GitHubRepository(
         Pair(version, versionCode)
     }.getOrDefault(Pair(name, 0L))
 
+    private fun filterTag(release: GitHubRelease, version: Regex?) = when(version) {
+        null -> true
+        else -> release.tag_name.matches(version)
+    }
+    
     private fun filterPreRelease(release: GitHubRelease) = when {
         prefs.ignorePreRelease.get() && release.prerelease -> false
         else -> true

@@ -140,7 +140,7 @@ fun TvUpdateItem(
         Box {
             TvSourceIcon(app)
             Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.End) {
-                TvIgnoreVersionButton(app, onIgnoreVersion)
+                // TvIgnoreVersionButton(app, onIgnoreVersion)
                 TvInstallButton(app, onInstall)
             }
         }

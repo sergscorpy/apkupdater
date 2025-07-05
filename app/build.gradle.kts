@@ -1,6 +1,7 @@
 import java.util.Properties
 import java.io.FileInputStream
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import java.io.ByteArrayOutputStream
 
 plugins {
     id("com.android.application")
@@ -11,13 +12,16 @@ android {
     namespace = "com.apkupdater"
     compileSdk = 34
 
-    val buildNumber = System.getenv("BUILD_NUMBER").orEmpty()
+    val stdout = ByteArrayOutputStream()
+    project.exec { commandLine("git", "describe", "--tags", "--always"); standardOutput = stdout }
+    
+    val buildNumber = stdout.toString().trim()//System.getenv("BUILD_NUMBER").orEmpty()
     defaultConfig {
         applicationId = "com.apkupdater" + System.getenv("BUILD_TAG").orEmpty()
         minSdk = 21
         targetSdk = 34
         versionCode = 52
-        versionName = if (buildNumber.isEmpty()) "3.0.3" else "0.0.$buildNumber"
+        versionName = if (buildNumber.isEmpty()) "3.0.3" else "$buildNumber"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
