@@ -70,7 +70,7 @@ class GitHubRepository(
 
     private fun selfCheck() = flow {
         val releases = service.getReleases().filter { filterPreRelease(it) }
-        val versions = getVersions(releases[0].name)
+        val versions = getVersions(releases.firstOrNull()?.name ?: "") 
 
         if (versions.second > BuildConfig.VERSION_CODE.toLong()) {
             emit(listOf(AppUpdate(
